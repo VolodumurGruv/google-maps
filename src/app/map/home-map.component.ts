@@ -79,6 +79,71 @@ export class HomeMapComponent implements OnInit, AfterViewInit {
   @ViewChild('mymap') mapElement: any;
   map!: google.maps.Map;
 
+  markers = [
+    {
+      key: 'marker1',
+      position: new google.maps.LatLng(50.4501, 30.5234),
+      map: this.map,
+      popup: {
+        title: 'с. Крячківка, Полтавська обл.',
+        photoUrl: './assets/img/home/kiivImg.jpg',
+        countRecords: 20,
+        link: '#',
+      },
+    },
+    {
+      key: 'marker2',
+      position: new google.maps.LatLng(49.8397, 24.0297),
+      map: this.map,
+      popup: {
+        title: 'м. Львів, Львівська обл.',
+        photoUrl: './assets/img/home/kiivImg.jpg',
+        countRecords: 16,
+        link: '#',
+      },
+    },
+    {
+      key: 'marker3',
+      position: new google.maps.LatLng(48.5132, 32.2597),
+      map: this.map,
+      popup: {
+        title: 'м. Кропівницький, Черкаська обл.',
+        photoUrl: './assets/img/home/kiivImg.jpg',
+        countRecords: 7,
+        link: '#',
+      },
+    },
+    {
+      key: 'marker4',
+      position: new google.maps.LatLng(46.4833, 30.7326),
+      map: this.map,
+      popup: {
+        title: 'м. Одеса, Одеська обл.',
+        photoUrl: './assets/img/home/kiivImg.jpg',
+        countRecords: 30,
+        link: '#',
+      },
+    },
+    {
+      key: 'marker5',
+      position: new google.maps.LatLng(48.6198, 22.301),
+      map: this.map,
+      popup: {
+        title: 'м. Ужгород, Закарпатська обл.',
+        photoUrl: './assets/img/home/kiivImg.jpg',
+        countRecords: 15,
+        link: '#',
+      },
+    },
+  ];
+
+  coordinates = new google.maps.LatLng(50.4501, 30.5234);
+
+  marker = new google.maps.Marker({
+    position: this.coordinates,
+    map: this.map,
+  });
+
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -97,8 +162,26 @@ export class HomeMapComponent implements OnInit, AfterViewInit {
       this.mapElement.nativeElement,
       mapProperties
     );
-    this.map.addListener('mapClick', (event: any) => {
+
+    this.marker.setMap(this.map);
+    this.marker.addListener('mapClick', (event: any) => {
       console.log(event);
+      const infoWindow = new google.maps.InfoWindow({
+        content: this.marker.getTitle(),
+      });
+      infoWindow.open(this.marker.getMap(), this.marker);
+    });
+
+    this.markers.forEach((markerInfo) => {
+      const marker = new google.maps.Marker({ ...markerInfo });
+      const infoWindow = new google.maps.InfoWindow({
+        content: marker.getTitle(),
+      });
+      marker.addListener('click', () => {
+        infoWindow.open(marker.getMap(), marker);
+      });
+      marker.setMap(this.map);
+      console.log(infoWindow);
     });
   }
 
